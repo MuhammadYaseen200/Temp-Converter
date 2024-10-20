@@ -1,4 +1,5 @@
 import streamlit as st
+import math
 
 # Function to convert Celsius to Fahrenheit
 def celsius_to_fahrenheit(celsius):
@@ -51,7 +52,7 @@ st.markdown(
 )
 
 # Header for the app
-st.markdown('<div class="header">Temperature Converter</div>', unsafe_allow_html=True)
+st.markdown('<div class="header">🌡️ Temperature Converter 🌡️</div>', unsafe_allow_html=True)
 
 # Input for temperature value
 temperature_value = st.number_input("Enter the temperature value:", step=0.1)
@@ -59,15 +60,21 @@ temperature_value = st.number_input("Enter the temperature value:", step=0.1)
 # Option to select the conversion type
 conversion_type = st.radio("Select conversion type:", ('Celsius to Fahrenheit', 'Fahrenheit to Celsius'))
 
+# Threshold for comparing float values to avoid precision issues
+def is_approximately_equal(val1, val2, threshold=0.01):
+    return math.isclose(val1, val2, abs_tol=threshold)
+
 # Perform conversion based on the selection
-if st.button('Convert', key="convert-btn"):
+if st.button('🌡️ Convert Temperature 🌡️'):
     if conversion_type == 'Celsius to Fahrenheit':
         converted_temp = celsius_to_fahrenheit(temperature_value)
         st.write(f"{temperature_value}°C is equal to {converted_temp:.2f}°F")
-        if converted_temp == 98.6:
+        # Check if the result is approximately 98.6°F (normal body temperature)
+        if is_approximately_equal(converted_temp, 98.6):
             st.markdown('<div class="normal-msg">This is the normal human body temperature!</div>', unsafe_allow_html=True)
     else:
         converted_temp = fahrenheit_to_celsius(temperature_value)
         st.write(f"{temperature_value}°F is equal to {converted_temp:.2f}°C")
-        if converted_temp == 37:
+        # Check if the result is approximately 37°C (normal body temperature)
+        if is_approximately_equal(converted_temp, 37):
             st.markdown('<div class="normal-msg">This is the normal human body temperature!</div>', unsafe_allow_html=True)
